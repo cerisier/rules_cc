@@ -29,6 +29,11 @@ cc_action_type(
 )
 
 cc_action_type(
+    name = "cuda_compile",
+    action_name = ACTION_NAMES.cuda_compile,
+)
+
+cc_action_type(
     name = "linkstamp_compile",
     action_name = ACTION_NAMES.linkstamp_compile,
 )
@@ -233,6 +238,13 @@ cc_action_type_set(
     ],
 )
 
+cc_action_type_set(
+    name = "cuda_compile_actions",
+    actions = [
+        ":cuda_compile",
+    ],
+)
+
 # This should match `compile_actions` with `lto_backend` omitted, because `lto_backend` actions
 # do not instantiate the full set of build variables.
 cc_action_type_set(
@@ -240,6 +252,7 @@ cc_action_type_set(
     actions = [
         ":linkstamp_compile",
         ":cpp_compile",
+        ":cuda_compile",
         ":cpp_header_parsing",
         ":cpp_module_compile",
         ":cpp_module_codegen",
@@ -256,6 +269,7 @@ cc_action_type_set(
     name = "compile_actions",
     actions = [
         ":cpp_compile_actions",
+        ":cuda_compile",
         ":c_compile_actions",
         ":assembly_actions",
         ":objc_compile",

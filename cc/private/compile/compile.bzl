@@ -49,8 +49,12 @@ load(
     "setup_common_compile_build_variables",
 )
 load("//cc/private/compile:lto_compilation_context.bzl", "create_lto_compilation_context")
+load("//cc/private/rules_impl:native_cc_common.bzl", _cc_common_internal = "native_cc_common")
 
 _VALID_CPP_SOURCE_TYPES = set([CPP_SOURCE_TYPE_SOURCE, CPP_SOURCE_TYPE_HEADER, CPP_SOURCE_TYPE_CLIF_INPUT_PROTO])
+# Bazel 9+ only: this knob is effective when cc_common.compile is served by
+# rules_cc Starlark implementation (not native cc_common compatibility path).
+_MAP_CU_TO_CUDA_COMPILE_FEATURE = "map_cu_to_cuda_compile_action"
 
 def _cpp_source_init(*, label, source, type):
     if type not in _VALID_CPP_SOURCE_TYPES:
@@ -1548,6 +1552,18 @@ def _create_compile_source_action(
             category = artifact_category.PIC_FILE,
             output_name = output_name,
         )
+    if not action_name and output_category == artifact_category.OBJECT_FILE and source_artifact.extension == "cu":
+        if feature_configuration.is_enabled(_MAP_CU_TO_CUDA_COMPILE_FEATURE):
+            if not _cc_common_internal.action_is_enabled(
+                feature_configuration = feature_configuration,
+                action_name = ACTION_NAMES.cuda_compile,
+            ):
+                fail("Feature '{}' is enabled but action '{}' is not configured".format(
+                    _MAP_CU_TO_CUDA_COMPILE_FEATURE,
+                    ACTION_NAMES.cuda_compile,
+                ))
+            action_name = ACTION_NAMES.cuda_compile
+
     if not action_name and output_category == artifact_category.CPP_MODULE:
         action_name = "c++-module-compile"
 

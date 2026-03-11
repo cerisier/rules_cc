@@ -36,6 +36,7 @@ _LEGACY_FILE_GROUPS = {
         Label("//cc/toolchains/actions:cc_flags_make_variable"),
         Label("//cc/toolchains/actions:c_compile"),
         Label("//cc/toolchains/actions:cpp_compile"),
+        Label("//cc/toolchains/actions:cuda_compile"),
         Label("//cc/toolchains/actions:cpp_header_parsing"),
     ],
     # There are no actions listed for coverage and objcopy in action_names.bzl.

@@ -26,15 +26,19 @@ def _test_action_types_impl(env, targets):
         .name().equals("c_compile")
     env.expect.that_target(targets.cpp_compile).provider(ActionTypeSetInfo) \
         .actions().contains_exactly([targets.cpp_compile.label])
+    env.expect.that_target(targets.cuda_compile).provider(ActionTypeSetInfo) \
+        .actions().contains_exactly([targets.cuda_compile.label])
     env.expect.that_target(targets.all_compile).provider(ActionTypeSetInfo) \
         .actions().contains_exactly([
         targets.c_compile.label,
         targets.cpp_compile.label,
+        targets.cuda_compile.label,
     ])
 
 TARGETS = [
     ":c_compile",
     ":cpp_compile",
+    ":cuda_compile",
     ":all_compile",
 ]
 

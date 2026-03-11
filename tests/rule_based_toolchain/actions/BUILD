@@ -18,11 +18,19 @@ util.helper_target(
 )
 
 util.helper_target(
+    cc_action_type,
+    name = "cuda_compile",
+    action_name = "cuda_compile",
+    visibility = ["//tests/rule_based_toolchain:__subpackages__"],
+)
+
+util.helper_target(
     cc_action_type_set,
     name = "all_compile",
     actions = [
         ":c_compile",
         ":cpp_compile",
+        ":cuda_compile",
     ],
     visibility = ["//tests/rule_based_toolchain:__subpackages__"],
 )
